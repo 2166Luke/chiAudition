@@ -33,7 +33,7 @@ def index():
 def register():
     """Register user"""
     if request.method == "POST":
-        db = SQL("sqlite:///finance.db")
+        db = SQL("sqlite:///auditions.db")
         username = request.form.get("username")
         if not username:
             return apology("Username required")
