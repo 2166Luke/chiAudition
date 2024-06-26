@@ -16,12 +16,12 @@ def scrapeTIC():
     baseUrl = "https://www.theatreinchicago.com/auditions/"
     homeHtml = urlopen(baseUrl).read().decode('latin-1')
 
-    pattern = r'<div class="post-content">\s*<div class="post-title">\s*<a href="industrydetail\.php\?AuditionID=(\d+)">\s*(.*?)</a>\s*</div>\s*<div class="theatre-name">\s*(.*?)</div>\s*<div class="post-meta">\s*(.*?)</div>\s*</div>'
+    pattern = pattern = r'<div class="post-content">\s*<div>(.*?)</div>\s*<div class="post-title">\s*<a href="industrydetail\.php\?AuditionID=(\d+)">\s*<strong>(.*?)</strong>\s*</a>\s*</div>\s*<div class="theatre-name">\s*(.*?)\s*</div>\s*<div class="post-meta">\s*<b>(.*?)</b>\s*(.*?)</div>'
     match_results = re.findall(pattern, homeHtml, re.IGNORECASE)
     print(match_results)
     for audition in match_results:
         # Extract audition ID
-        auditionId = audition[0]
+        auditionId = audition[1]
 
         # Route to the individual audition page and extract the title
         auditionUrl = baseUrl + "industrydetail.php?AuditionID=" + auditionId 
@@ -30,7 +30,6 @@ def scrapeTIC():
         match_results = re.search(pattern, auditionHtml, re.IGNORECASE)
         if match_results:
             auditionTitle = match_results.group(1)
-            print(f"Audition Title: {auditionTitle}")
 
         # Extract the company
         pattern = r'<div class=\"post-title\">\s*(.*?)\s*</div>'
