@@ -40,7 +40,7 @@ def scrapeTIC():
             company = re.sub("<.*?>", "", company) # Remove HTML tags
         
         # Extract the date and time
-        pattern = r'<div class'
+        pattern = r'<div class='
 
 def pushAudition(title, company, date, time, otherDates, location, description, pay, eqStatus, personnel, source):
     
