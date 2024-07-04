@@ -17,15 +17,30 @@ def scrapeTIC():
             dates = audition[4]
         else:
             dates = "N/A"
-        print(company, "    ", title, "    ", status, "    ", dates)
 
         # Route to the individual audition page and extract the title
-        auditionUrl = baseUrl + "industrydetail.php?AuditionID=" + auditionId 
-        auditionHtml = urlopen(auditionUrl).read().decode('latin-1')
-        
-        
+        auditionUrl = baseUrl + "industrydetail.php?AuditionID=" + auditionId
+        source = "<a href="+auditionUrl+">Theatre In Chicago</a>"
+        location = "Chicagoland"
 
-def pushAudition(title, company, date, time, otherDates, location, description, pay, eqStatus, personnel, source):
+        # Extract pay status from audition site
+        auditionHtml = urlopen(auditionUrl).read().decode('latin-1')
+        pattern = r'<div class=\"auditions-meta\">\s*<p>\s*.*\s*(.*?)\s*</p>'
+        payStatus = re.search(pattern, auditionHtml, re.IGNORECASE).group(1)
+
+        # Extract description from audition site
+        start_index = auditionHtml.find("div class=\"post-description\">") + len("div class=\"post-description\">")
+        end_index = auditionHtml.find("<div id=\"contact\"")
+        description = auditionHtml[start_index:end_index]
+        CLEANR = re.compile('<.*?>')
+        clean_description = re.sub(CLEANR, '', description)
+
+        personnel = "Check Description"
+        print(source)
+
+        pushAudition(title, company, dates, location, clean_description, payStatus, status, personnel, source)
+
+def pushAudition(title, company, dates, location, description, pay, eqStatus, personnel, source):
     
     print(f"Title: {title}")
 
